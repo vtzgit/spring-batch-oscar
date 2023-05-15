@@ -24,6 +24,7 @@ import static org.springframework.batch.support.DatabaseType.H2;
 import static org.springframework.batch.support.DatabaseType.HSQL;
 import static org.springframework.batch.support.DatabaseType.MYSQL;
 import static org.springframework.batch.support.DatabaseType.ORACLE;
+import static org.springframework.batch.support.DatabaseType.OSCAR;
 import static org.springframework.batch.support.DatabaseType.POSTGRES;
 import static org.springframework.batch.support.DatabaseType.SQLITE;
 import static org.springframework.batch.support.DatabaseType.SQLSERVER;
@@ -47,7 +48,7 @@ import org.springframework.util.StringUtils;
  * Factory bean for {@link PagingQueryProvider} interface. The database type
  * will be determined from the data source if not provided explicitly. Valid
  * types are given by the {@link DatabaseType} enum.
- * 
+ *
  * @author Dave Syer
  * @author Michael Minella
  */
@@ -62,7 +63,7 @@ public class SqlPagingQueryProviderFactoryBean implements FactoryBean<PagingQuer
 	private String whereClause;
 
 	private String selectClause;
-	
+
 	private String groupClause;
 
 	private Map<String, Order> sortKeys;
@@ -80,12 +81,13 @@ public class SqlPagingQueryProviderFactoryBean implements FactoryBean<PagingQuer
 		providers.put(H2,new H2PagingQueryProvider());
 		providers.put(MYSQL,new MySqlPagingQueryProvider());
 		providers.put(ORACLE,new OraclePagingQueryProvider());
+		providers.put(OSCAR,new OraclePagingQueryProvider());
 		providers.put(POSTGRES,new PostgresPagingQueryProvider());
 		providers.put(SQLITE, new SqlitePagingQueryProvider());
 		providers.put(SQLSERVER,new SqlServerPagingQueryProvider());
 		providers.put(SYBASE,new SybasePagingQueryProvider());
 	}
-	
+
 	/**
 	 * @param groupClause SQL GROUP BY clause part of the SQL query string
 	 */
@@ -134,20 +136,20 @@ public class SqlPagingQueryProviderFactoryBean implements FactoryBean<PagingQuer
 	public void setSortKeys(Map<String, Order> sortKeys) {
 		this.sortKeys = sortKeys;
 	}
-	
+
 	public void setSortKey(String key) {
 		Assert.doesNotContain(key, ",", "String setter is valid for a single ASC key only");
-		
+
 		Map<String, Order> keys = new LinkedHashMap<>();
 		keys.put(key, Order.ASCENDING);
-		
+
 		this.sortKeys = keys;
 	}
 
 	/**
 	 * Get a {@link PagingQueryProvider} instance using the provided properties
 	 * and appropriate for the given database type.
-	 * 
+	 *
 	 * @see FactoryBean#getObject()
 	 */
     @Override
@@ -184,7 +186,7 @@ public class SqlPagingQueryProviderFactoryBean implements FactoryBean<PagingQuer
 
 	/**
 	 * Always returns {@link PagingQueryProvider}.
-	 * 
+	 *
 	 * @see FactoryBean#getObjectType()
 	 */
     @Override
